@@ -29,11 +29,9 @@ def update_mattermost_status(song):
     }
 
     payload = {
-        "custom_status": {
-            "emoji": "🎵",
-            "text": f"Now Playing: {song}",
-            "duration": "custom"
-        }
+        "emoji": "🎵",
+        "text": f"Now Playing: {song}",
+        "duration": "custom"
     }
 
     r = requests.put(url, json=payload, headers=headers)
