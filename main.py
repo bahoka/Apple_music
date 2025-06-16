@@ -18,6 +18,7 @@ def get_current_song():
         return None
 
 def update_mattermost_status(song):
+    import json
     url = os.getenv("MM_URL") + "/api/v4/users/me/status/custom"
     token = os.getenv("MM_TOKEN")
 
@@ -30,9 +31,12 @@ def update_mattermost_status(song):
         "custom_status": {
             "emoji": "🎵",
             "text": f"Now Playing: {song}",
-            "duration": "dont_clear"
+            "duration": "dont_clear"  # или "today", "one_hour", "thirty_minutes"
         }
     }
+
+    # DEBUG: покажем, что отправляем
+    print("[DEBUG] Payload:", json.dumps(payload, indent=2))
 
     r = requests.put(url, json=payload, headers=headers)
     print(f"[Status] {r.status_code} - {r.text}")
@@ -43,7 +47,7 @@ def main_loop():
         song = get_current_song()
         if song and song != last_song:
             print(f"[Now Playing] {song}")
-            update_status_with_song(song)
+            update_mattermost_status(song)  # <--- исправлено
             last_song = song
         sleep(60)
 
