@@ -17,21 +17,19 @@ def get_current_song():
     except subprocess.CalledProcessError:
         return None
 
-def update_mattermost_status(song):
-    url = os.getenv("MM_URL") + "/api/v4/users/me/status/custom"
+def update_status_with_song(song):
+    url = os.getenv("MM_URL") + "/api/v4/users/me/status"
     token = os.getenv("MM_TOKEN")
-    csrf = os.getenv("MM_CSRF")
 
     headers = {
         "Authorization": f"Bearer {token}",
-        "X-CSRF-Token": csrf,
         "Content-Type": "application/json"
     }
 
+    # Обновляем статус на "dnd" или любой другой
     payload = {
-        "emoji": "🎵",
-        "text": f"Now Playing: {song}",
-        "duration": "custom"
+        "status": "dnd",  # Можно поставить "online", "away" или "dnd"
+        "text": f"Now Playing: {song}"  # Здесь вставляем название трека
     }
 
     r = requests.put(url, json=payload, headers=headers)
@@ -43,7 +41,7 @@ def main_loop():
         song = get_current_song()
         if song and song != last_song:
             print(f"[Now Playing] {song}")
-            update_mattermost_status(song)
+            update_status_with_song(song)
             last_song = song
         sleep(60)
 
