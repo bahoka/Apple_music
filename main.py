@@ -1,7 +1,10 @@
+import os
 import subprocess
 import requests
-import os
 from time import sleep
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def get_current_song():
     try:
