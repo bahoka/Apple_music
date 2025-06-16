@@ -18,21 +18,21 @@ def get_current_song():
         return None
 
 def update_mattermost_status(song):
-    url = os.getenv("MM_URL") + "/api/v4/users/me/status"
+    url = os.getenv("MM_URL") + "/api/v4/users/me/status/custom"
+    token = os.getenv("MM_TOKEN")
     csrf = os.getenv("MM_CSRF")
-    auth_token = os.getenv("MM_TOKEN")
 
     headers = {
-        "Authorization": f"Bearer {auth_token}",
+        "Authorization": f"Bearer {token}",
         "X-CSRF-Token": csrf,
         "Content-Type": "application/json"
     }
 
     payload = {
-        "status": "online",
         "custom_status": {
-            "emoji": ":musical_note:",
-            "text": f"🎧 {song}"
+            "emoji": "🎵",
+            "text": f"Now Playing: {song}",
+            "duration": "custom"
         }
     }
 
