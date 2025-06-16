@@ -17,8 +17,8 @@ def get_current_song():
     except subprocess.CalledProcessError:
         return None
 
-def update_status_with_song(song):
-    url = os.getenv("MM_URL") + "/api/v4/users/me/status"
+def update_mattermost_status(song):
+    url = os.getenv("MM_URL") + "/api/v4/users/me/status/custom"
     token = os.getenv("MM_TOKEN")
 
     headers = {
@@ -26,10 +26,12 @@ def update_status_with_song(song):
         "Content-Type": "application/json"
     }
 
-    # Обновляем статус на "dnd" или любой другой
     payload = {
-        "status": "dnd",  # Можно поставить "online", "away" или "dnd"
-        "text": f"Now Playing: {song}"  # Здесь вставляем название трека
+        "custom_status": {
+            "emoji": "🎵",
+            "text": f"Now Playing: {song}",
+            "duration": "dont_clear"
+        }
     }
 
     r = requests.put(url, json=payload, headers=headers)
